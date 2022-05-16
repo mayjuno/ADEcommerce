@@ -1,12 +1,9 @@
-from ast import keyword
 from email.mime import image
-from pyexpat import model
-from re import S, T
-from telnetlib import STATUS
-from turtle import update
-from unicodedata import category
-from venv import create
+from itertools import product
+from re import M
+from turtle import title
 from django.db import models
+from django.utils.safestring import mark_safe
 
 # Create your models here.
 
@@ -55,6 +52,23 @@ class Product(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     update_at =models.DateTimeField(auto_now=True)
 
+
+    def __str__(self):
+        return self.title
+
+    # method to create a fake table field in the read only mode
+    def image_tag(self):
+        return mark_safe('<img src="{}" hight ="50"/>')
+
+    image_tag.short_descriptions = 'Image'
+
+class Images(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    title = models.CharField(max_length=50, blank=True)
+    image = models.ImageField(blank = True, upload_to = 'images/')
+
+    class Meta:
+        verbose_name_plural = 'images'
 
     def __str__(self):
         return self.title
